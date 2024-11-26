@@ -7,15 +7,13 @@ import { useState } from 'react';
 export default function Sample() {
 	let data = generateRandomNodesLinks();
 	let [graphData, setGraphData] = useState(data);
-	let [selectedNode, setSelectedNode] = useState(data.nodes[0]?.id);
-	let [nodeInfo, setNodeInfo] = useState();
-	function handleNodeClick(node, event) {
-		setSelectedNode(node?.id);
-		setNodeInfo(data.nodes.filter((node) => node?.id === selectedNode)[0]);
-	}
+	let [selectedNode, setSelectedNode] = useState(data.nodes[0]);
 
-	function handleChange(event) {
-		setSelectedNode(Math.min(event.target.value, data.nodes.length));
+	function handleNodeClick(selectedNode, event) {
+		event.stopPropagation();
+		setSelectedNode(
+			data.nodes.filter((node) => node?.id === selectedNode?.id)[0]
+		);
 	}
 
 	return (
@@ -27,18 +25,16 @@ export default function Sample() {
 				onNodeClick={handleNodeClick}
 			/>
 			<div>
-				Selected node: {selectedNode}
-				<br />
-				{nodeInfo && (
-					<>
-						Node details:
-						<br />
-						id: {nodeInfo?.id} <br />
-						value: {nodeInfo?.val} <br />
-						name: {nodeInfo?.name} <br />
-						type: {nodeInfo?.type}
-					</>
-				)}
+				Selected node: {selectedNode?.id}
+				<br /> <br />
+				<>
+					Node details:
+					<br />
+					id: {selectedNode?.id} <br />
+					value: {selectedNode?.val} <br />
+					name: {selectedNode?.name} <br />
+					type: {selectedNode?.type}
+				</>
 				<br />
 			</div>
 		</div>

@@ -10,6 +10,7 @@ export default function generateRandomNodesLinks(n = 100) {
 			name: 'Test',
 			val: nodeType === 'parent' ? 50 : 10,
 			type: nodeType,
+			color: nodeType === 'parent' ? 'green' : 'white',
 		};
 	});
 	const links = temp.map((i) => {
