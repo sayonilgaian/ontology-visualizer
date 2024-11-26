@@ -4,7 +4,13 @@ export default function generateRandomNodesLinks(n = 100) {
 		temp.push(i + 1);
 	}
 	const nodes = temp.map((i) => {
-		return { id: i };
+		let nodeType = Math.random() * 100 > 50 ? 'parent' : 'child';
+		return {
+			id: i,
+			name: 'Test',
+			val: nodeType === 'parent' ? 50 : 10,
+			type: nodeType,
+		};
 	});
 	const links = temp.map((i) => {
 		return {
