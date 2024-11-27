@@ -1,8 +1,10 @@
 import ForceGraph3D from 'react-force-graph-3d';
 import generateRandomNodesLinks from '../utils/generateRandomNodesLinks';
 import css from './sample.module.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import handleNodeDelete from '../utils/graph-interactions/deleteNode';
+import handleRevert from '../utils/graph-interactions/revertChange';
+import handleDeleteLink from '../utils/graph-interactions/deleteLink';
 // import data from '../data/data.json';
 
 export default function Sample() {
@@ -17,8 +19,14 @@ export default function Sample() {
 		);
 	}
 
+	useEffect(() => {
+		sessionStorage.setItem('previous', JSON.stringify(graphData));
+	}, []);
+
 	return (
-		<div className={css.container}>
+		<div
+			className={css.container}
+			onKeyDown={handleRevert}>
 			<ForceGraph3D
 				graphData={graphData}
 				width={800}
@@ -27,7 +35,9 @@ export default function Sample() {
 				onNodeRightClick={(node, event) =>
 					handleNodeDelete(node, event, setGraphData)
 				}
-				// onLinkRightClick={handleLinkDelete}
+				onLinkRightClick={(link, event) =>
+					handleDeleteLink(link, event, setGraphData)
+				}
 			/>
 			<div>
 				Selected node: {selectedNode?.id}
@@ -41,6 +51,10 @@ export default function Sample() {
 					type: {selectedNode?.type}
 				</>
 				<br />
+				<br />
+				{/* <button onClick={() => handleRevert(setGraphData)}>
+					Revert Change
+				</button> */}
 			</div>
 		</div>
 	);

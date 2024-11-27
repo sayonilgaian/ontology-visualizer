@@ -9,6 +9,8 @@ export default function handleNodeDelete(selectedNode, event, setGraphData) {
 		);
 		// step 2: now delete selected node from nodes array
 		let newNodes = prev.nodes.filter((node) => node?.id !== selectedNode?.id);
+		// save last step do be used for reverting later
+		sessionStorage.setItem('previous', JSON.stringify(prev));
 		return {
 			nodes: newNodes,
 			links: newLinks,
