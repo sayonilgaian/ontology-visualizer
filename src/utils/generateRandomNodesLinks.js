@@ -11,12 +11,15 @@ export default function generateRandomNodesLinks(n = 100) {
 			val: nodeType === 'parent' ? 50 : 10,
 			type: nodeType,
 			color: nodeType === 'parent' ? 'green' : 'white',
+			resolution: 64,
 		};
 	});
 	const links = temp.map((i) => {
 		return {
 			target: i,
 			source: Math.max(parseInt(Math.random() * n), 1),
+			name: 'link',
+			// width: 100,
 		};
 	});
 	return { nodes, links };

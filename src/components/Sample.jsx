@@ -2,6 +2,7 @@ import ForceGraph3D from 'react-force-graph-3d';
 import generateRandomNodesLinks from '../utils/generateRandomNodesLinks';
 import css from './sample.module.css';
 import { useState } from 'react';
+import handleNodeDelete from '../utils/graph-interactions/deleteNode';
 // import data from '../data/data.json';
 
 export default function Sample() {
@@ -23,6 +24,10 @@ export default function Sample() {
 				width={800}
 				height={500}
 				onNodeClick={handleNodeClick}
+				onNodeRightClick={(node, event) =>
+					handleNodeDelete(node, event, setGraphData)
+				}
+				// onLinkRightClick={handleLinkDelete}
 			/>
 			<div>
 				Selected node: {selectedNode?.id}
