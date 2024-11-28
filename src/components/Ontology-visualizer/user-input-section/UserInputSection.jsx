@@ -17,8 +17,11 @@ export default function UserInputSection({
 	handleSearchNode,
 	nodesPositions,
 	canvasRef,
-    setNewLinkTarget
+	setNewLinkTarget,
 }) {
+	function handleReset() {
+		canvasRef?.current?.zoomToFit(800);
+	}
 	return (
 		<>
 			<div>
@@ -97,6 +100,7 @@ export default function UserInputSection({
 							value={searchNodeId}
 							onChange={(e) => setSearchNodeId(e.target.value.toLowerCase())}
 						/>
+						<button onClick={handleReset}>Reset</button>
 						<br />
 						<div style={{ maxHeight: '100px', overflowY: 'scroll' }}>
 							Results:
