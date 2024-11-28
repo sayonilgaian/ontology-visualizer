@@ -1,8 +1,8 @@
 import './App.css';
-import Sample from './components/Sample';
+import OntologyVisualizer from './components/Ontology-visualizer/Ontology-visualizer';
 
 function App() {
-	return <Sample />;
+	return <OntologyVisualizer/>
 }
 
 export default App;
