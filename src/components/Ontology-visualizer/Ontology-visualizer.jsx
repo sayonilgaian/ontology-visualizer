@@ -1,18 +1,19 @@
-import ForceGraph3D from 'react-force-graph-3d';
-import generateRandomNodesLinks from './utils/generateRandomNodesLinks';
+import React, { useEffect, useRef, useState, lazy, Suspense } from 'react';
 import css from './Ontology-visualizer.module.css';
-import { Fragment, useEffect, useRef, useState } from 'react';
-import handleNodeDelete from './utils/graph-interactions/deleteNode';
-// import handleRevert from '../utils/graph-interactions/revertChange';
-import handleDeleteLink from './utils/graph-interactions/deleteLink';
+import ForceGraph3D from 'react-force-graph-3d';
 import data from './utils/data/data.json';
-// import data from '../data/bigData.json';
+const UserInputSection = lazy(() =>
+	import('./user-input-section/UserInputSection')
+);
+import generateRandomNodesLinks from './utils/generateRandomNodesLinks';
+import handleNodeDelete from './utils/graph-interactions/deleteNode';
+import handleDeleteLink from './utils/graph-interactions/deleteLink';
 import handleAddNode from './utils/graph-interactions/addNode';
-import { v4 as uuid } from 'uuid';
 import handleAddLink from './utils/graph-interactions/addLink';
 import handleEngineStop from './utils/graph-interactions/engineStop';
 import handleSearchNode from './utils/graph-interactions/searchNode';
-import UserInputSection from './user-input-section/UserInputSection';
+// import handleRevert from '../utils/graph-interactions/revertChange';
+// import data from '../data/bigData.json';
 
 export default function OntologyVisualizer() {
 	let [graphData, setGraphData] = useState(data);
@@ -25,7 +26,6 @@ export default function OntologyVisualizer() {
 	let [newLinkTargetNode, setNewLinkTarget] = useState(graphData?.nodes[1]?.id);
 	let [searchNodeId, setSearchNodeId] = useState('');
 	let [nodesPositions, setNodesPositions] = useState(new Map());
-	let [selectedSearchNode, setSelectedSearchNode] = useState('');
 	let [canvasRendered, setCanvasRendered] = useState(false);
 	let ref = useRef();
 
@@ -60,45 +60,48 @@ export default function OntologyVisualizer() {
 	}, []);
 
 	return (
-		<div className={css.container}>
-			{/* ============== Actual Canvas ================= */}
-			<ForceGraph3D
-				ref={ref}
-				graphData={graphData}
-				width={800}
-				height={500}
-				onNodeClick={handleNodeClick}
-				onNodeRightClick={(node, event) =>
-					handleNodeDelete(node, event, setGraphData)
-				}
-				onLinkRightClick={(link, event) =>
-					handleDeleteLink(link, event, setGraphData)
-				}
-				cooldownTime={1000}
-				onEngineStop={() => handleEngineStop(graphData, setNodesPositions)}
-			/>
-			{/* ============== Interactions ================= */}
-			{canvasRendered && (
-				<UserInputSection
-					selectedNode={selectedNode}
-					newNode={newNode}
-					newLinkSourceNode={newLinkSourceNode}
+		<Suspense fallback={<div>Loading...</div>}>
+			<div className={css.container}>
+				{/* ============== Actual Canvas ================= */}
+				<ForceGraph3D
+					ref={ref}
 					graphData={graphData}
-					newLinkTargetNode={newLinkTargetNode}
-					searchNodeId={searchNodeId}
-					createNewNode={createNewNode}
-					setNewLinkSource={setNewLinkSource}
-					setSearchNodeId={setSearchNodeId}
-					handleAddNode={handleAddNode}
-					setGraphData={setGraphData}
-					handleAddLink={handleAddLink}
-					css={css}
-					handleSearchNode={handleSearchNode}
-					nodesPositions={nodesPositions}
-					canvasRef={ref}
-					setNewLinkTarget={setNewLinkTarget}
+					width={800}
+					height={500}
+					onNodeClick={handleNodeClick}
+					onNodeRightClick={(node, event) =>
+						handleNodeDelete(node, event, setGraphData)
+					}
+					onLinkRightClick={(link, event) =>
+						handleDeleteLink(link, event, setGraphData)
+					}
+					cooldownTime={1000}
+					onEngineStop={() => handleEngineStop(graphData, setNodesPositions)}
+					linkHoverPrecision={10}
 				/>
-			)}
-		</div>
+				{/* ============== Interactions ================= */}
+				{canvasRendered && (
+					<UserInputSection
+						selectedNode={selectedNode}
+						newNode={newNode}
+						newLinkSourceNode={newLinkSourceNode}
+						graphData={graphData}
+						newLinkTargetNode={newLinkTargetNode}
+						searchNodeId={searchNodeId}
+						createNewNode={createNewNode}
+						setNewLinkSource={setNewLinkSource}
+						setSearchNodeId={setSearchNodeId}
+						handleAddNode={handleAddNode}
+						setGraphData={setGraphData}
+						handleAddLink={handleAddLink}
+						css={css}
+						handleSearchNode={handleSearchNode}
+						nodesPositions={nodesPositions}
+						canvasRef={ref}
+						setNewLinkTarget={setNewLinkTarget}
+					/>
+				)}
+			</div>
+		</Suspense>
 	);
 }
